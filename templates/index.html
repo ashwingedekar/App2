@@ -87,7 +87,7 @@
         <option value="max">Maximum Speed Data</option>
         <option value="min">Minimum Speed Data</option>
     </select>
-
+<br>
     <button type="button" onclick="fetchData()">Submit</button>
 </form>
 
@@ -131,11 +131,12 @@
                 var outputDiv = document.getElementById("output");
 
                 if (data.success) {
+                    console.log('Received data:', data);  // Add this line for debugging
                     outputDiv.innerHTML = `
-                        <p>Date Time: ${data.max_speed_data['Date Time']}</p>
-                        <p>Traffic Total (Speed): ${data.max_speed_data['Traffic Total (Speed)']}</p>
-                        <p>Traffic Total (Speed)(RAW): ${data.max_speed_data['Traffic Total (Speed)(RAW)']}</p>
-                        <p>Output Location: ${data.max_speed_data['output_location']}</p>
+                        <p>Date Time: ${data.min_speed_data ? data.min_speed_data['Date Time'] : data.max_speed_data['Date Time']}</p>
+                        <p>Traffic Total (Speed): ${data.min_speed_data ? data.min_speed_data['Traffic Total (Speed)'] : data.max_speed_data['Traffic Total (Speed)']}</p>
+                        <p>Traffic Total (Speed)(RAW): ${data.min_speed_data ? data.min_speed_data['Traffic Total (Speed)(RAW)'] : data.max_speed_data['Traffic Total (Speed)(RAW)']}</p>
+                        <p>Output Location: ${data.min_speed_data ? data.min_speed_data['output_location'] : data.max_speed_data['output_location']}</p>
                         <p>Message: ${data.message}</p>
                         <p>Success: ${data.success}</p>
                     `;
@@ -150,6 +151,7 @@
             .catch(error => console.error('Error:', error));
     }
 </script>
+
 
 </body>
 </html>
