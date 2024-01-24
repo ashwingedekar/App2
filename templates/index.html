@@ -92,10 +92,12 @@
 </form>
 
 <!-- New container div for the output with a border -->
-<div id="output-container">
-    <strong>Output:</strong><br>
-    <span id="output"></span>
+<label for="outputLabel">Output:</label>
+<div id="output" style="border: 2px solid #4CAF50; padding: 20px; margin-top: 20px;">
+    <!-- Display fetched data here -->
 </div>
+
+
 <script>
     function fetchData() {
         var sensorId = document.getElementById("sensorId").value;
@@ -125,23 +127,29 @@
         })
             .then(response => response.json())
             .then(data => {
-                // Get the output span element
-                var outputSpan = document.getElementById("output");
+                // Update the content of the output div
+                var outputDiv = document.getElementById("output");
 
-                // Clear existing content
-                outputSpan.innerHTML = "";
-
-                // Add each property to the output without any formatting
-                for (var key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        outputSpan.innerHTML += key + ": " + data[key] + "<br>";
-                    }
+                if (data.success) {
+                    outputDiv.innerHTML = `
+                        <p>Date Time: ${data.max_speed_data['Date Time']}</p>
+                        <p>Traffic Total (Speed): ${data.max_speed_data['Traffic Total (Speed)']}</p>
+                        <p>Traffic Total (Speed)(RAW): ${data.max_speed_data['Traffic Total (Speed)(RAW)']}</p>
+                        <p>Output Location: ${data.max_speed_data['output_location']}</p>
+                        <p>Message: ${data.message}</p>
+                        <p>Success: ${data.success}</p>
+                    `;
+                } else {
+                    outputDiv.innerHTML = `
+                        <p>Error: ${data.message}</p>
+                        <p>Success: ${data.success}</p>
+                    `;
+                    outputDiv.style.borderColor = '#FF5733'; // Red border for error
                 }
             })
             .catch(error => console.error('Error:', error));
     }
 </script>
-
 
 </body>
 </html>

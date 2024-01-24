@@ -38,36 +38,45 @@ def fetch_data():
 
             if speed_data_type == 'min':
                 speed_row = df.loc[df["Traffic Total (Speed)(RAW)"].idxmin()]
+                speed_data_key = "min_speed_data"
             else:
                 speed_row = df.loc[df["Traffic Total (Speed)(RAW)"].idxmax()]
+                speed_data_key = "max_speed_data"
 
             current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
             output_location = f"C:/prtg/output_{speed_data_type}_speed_{current_datetime}.csv"
-            speed_df = pd.DataFrame([speed_row])
-            speed_df.to_csv(output_location, index=False)
 
+            # Create a smaller DataFrame with only the relevant information
+            output_df = pd.DataFrame({
+                "Date Time": speed_row['Date Time'],
+                "Traffic Total (Speed)": speed_row['Traffic Total (Speed)'],
+                "Traffic Total (Speed)(RAW)": speed_row['Traffic Total (Speed)(RAW)'],
+                "output_location": output_location
+            }, index=[0])
+
+            # Save the smaller DataFrame to a CSV file
+            output_df.to_csv(output_location, index=False)
+
+            # Prepare the result as a dictionary
             result_dict = {
                 "success": True,
                 "message": "Data fetched successfully.",
-                "Date Time": speed_row["Date Time"],
-                "Traffic Total (Speed)": speed_row["Traffic Total (Speed)"],
-                "Traffic Total (Speed)(RAW)": speed_row["Traffic Total (Speed)(RAW)"],
-                "output_location": output_location
+                speed_data_key: {
+                    "Date Time": speed_row['Date Time'],
+                    "Traffic Total (Speed)": speed_row['Traffic Total (Speed)'],
+                    "Traffic Total (Speed)(RAW)": speed_row['Traffic Total (Speed)(RAW)'],
+                    "output_location": output_location
+                }
             }
+
+            # Return the result as JSON
+            return jsonify(result_dict)
 
         else:
-            result_dict = {
-                "success": False,
-                "message": f"Error: {response.status_code} - {response.text}"
-            }
+            return jsonify({"success": False, "message": f"Error: {response.status_code} - {response.text}"})
 
     except Exception as e:
-        result_dict = {
-            "success": False,
-            "message": f"Error processing CSV data: {str(e)}"
-        }
-
-    return jsonify(result_dict)
+        return jsonify({"success": False, "message": f"Error processing CSV data: {str(e)}"})
 
 if __name__ == '__main__':
     app.run(debug=True)
