@@ -17,13 +17,22 @@
 
         h1 {
             margin-bottom: 20px;
+            text-align: center; /* Center the text */
         }
+
+        #main-container {
+            display: flex;
+            justify-content: space-between; /* Create space between form and output */
+            width: 100%;
+            max-width: 800px; /* Limit the maximum width */
+        }
+
 
         form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 300px;
+            align-items: flex-start; /* Align form items to the left */
+            width: 45%; /* Adjust the width as needed */
         }
 
         label, select, input, button {
@@ -41,19 +50,79 @@
         }
 
         #output-container {
-            margin-top: 20px;
-            border: 2px solid #4CAF50;
-            padding: 10px;
+           
+            padding: 20px;
             border-radius: 5px;
-            width: 300px;
+            width: 45%; /* Adjust the width as needed */
             white-space: pre-wrap;
         }
+        select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Style the options within the select dropdown */
+select option {
+    padding: 8px;
+    background-color: white;
+    color: #333;
+}
+
+/* Remove default arrow in Firefox */
+select::-moz-focus-inner {
+    border: 0;
+}
+
+/* Remove default arrow in IE 10+ */
+select::-ms-expand {
+    display: none;
+}
+
+
+/* Add hover effect for options */
+select option:hover {
+    background-color: #ddd;
+}
+
+/* Style the arrow icon for Chrome, Safari, and Edge */
+select:after {
+    content: '▼';
+    font-size: 12px;
+    color: #333;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Ensure the arrow doesn't interfere with clicking the select */
+}
+#sensorId {
+    /* Add your styles here */
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+#sensorId:focus option {
+        /* Add your styles for focused options here */
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px;
+    }
+
+
+    
     </style>
 </head>
 <body>
 
 <h1>Data Fetching Page</h1>
-
+<div id="main-container">
 <form id="dataForm">
     <label for="sensorId">Sensor ID:</label>
     <select id="sensorId" name="sensorId">
@@ -92,12 +161,12 @@
 </form>
 
 <!-- New container div for the output with a border -->
-<label for="outputLabel">Output:</label>
-<div id="output" style="border: 2px solid #4CAF50; padding: 20px; margin-top: 20px;">
+
+<div id="output" style="padding: 20px; margin-top: 20px; margin-left:50px;">
     <!-- Display fetched data here -->
 </div>
 
-
+</div>
 <script>
     function fetchData() {
         var sensorId = document.getElementById("sensorId").value;
@@ -132,6 +201,13 @@
 
                 if (data.success) {
                     console.log('Received data:', data);  // Add this line for debugging
+
+                    // Set border style only when there is content
+                    //outputDiv.style.border = '2px solid #4CAF50';
+                    outputDiv.style.padding = '20px';
+                    outputDiv.style.paddingLeft = '25px';
+                    outputDiv.style.marginTop = '20px';
+
                     outputDiv.innerHTML = `
                         <p>Date Time: ${data.min_speed_data ? data.min_speed_data['Date Time'] : data.max_speed_data['Date Time']}</p>
                         <p>Traffic Total (Speed): ${data.min_speed_data ? data.min_speed_data['Traffic Total (Speed)'] : data.max_speed_data['Traffic Total (Speed)']}</p>
@@ -141,6 +217,11 @@
                         <p>Success: ${data.success}</p>
                     `;
                 } else {
+                    // Remove border style when there is no content
+                    outputDiv.style.border = 'none';
+                    outputDiv.style.paddingLeft = '0';
+                    outputDiv.style.marginTop = '0';
+
                     outputDiv.innerHTML = `
                         <p>Error: ${data.message}</p>
                         <p>Success: ${data.success}</p>

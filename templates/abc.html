@@ -1,0 +1,48 @@
+/* Style the select element */
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Style the options within the select dropdown */
+select option {
+    padding: 8px;
+    background-color: white;
+    color: #333;
+}
+
+/* Remove default arrow in Firefox */
+select::-moz-focus-inner {
+    border: 0;
+}
+
+/* Remove default arrow in IE 10+ */
+select::-ms-expand {
+    display: none;
+}
+
+/* Remove default arrow in Chrome, Safari, and Edge */
+select::-webkit-appearance {
+    none;
+}
+
+/* Add hover effect for options */
+select option:hover {
+    background-color: #ddd;
+}
+
+/* Style the arrow icon for Chrome, Safari, and Edge */
+select:after {
+    content: '▼';
+    font-size: 12px;
+    color: #333;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Ensure the arrow doesn't interfere with clicking the select */
+}
